@@ -1,6 +1,7 @@
 import faker from 'faker';
+import { MapItem } from './Map';
 
-export class User {
+export class User implements MapItem {
     name: string;
     location: {
         lat: number;
@@ -13,5 +14,9 @@ export class User {
             lat: parseFloat(faker.address.latitude()),
             lng: parseFloat(faker.address.longitude())
         };
+    }
+
+    markerContent(): string {
+        return `User Name: ${this.name}`;
     }
 }

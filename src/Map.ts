@@ -1,5 +1,12 @@
-import { User } from './User';
-import { Company } from './Company';
+// Instructions to every other class on how they
+// can be an argument to 'addMarker'
+export interface MapItem {
+    location: {
+        lat: number;
+        lng: number;
+    };
+    markerContent(): string;
+}
 
 export class Map {
     private googleMap: google.maps.Map;
@@ -14,23 +21,21 @@ export class Map {
         });
     }
 
-    addUserMarker(user: User): void {
-        new google.maps.Marker({
+    addMarker(item: MapItem): void {
+        const marker = new google.maps.Marker({
             map: this.googleMap,
             position: {
-                lat: user.location.lat,
-                lng: user.location.lng
+                lat: item.location.lat,
+                lng: item.location.lng
             }
         });
-    }
 
-    addCompanyMarker(company: Company): void {
-        new google.maps.Marker({
-            map: this.googleMap,
-            position: {
-                lat: company.location.lat,
-                lng: company.location.lng
-            }
+        marker.addListener('click', () => {
+            const infoWindow = new google.maps.InfoWindow({
+                content: item.markerContent()
+            });
+
+            infoWindow.open(this.googleMap, marker);
         });
     }
 }
